@@ -46,6 +46,7 @@ jobs:
         run: |
           docker run --rm -d \
             --network ${{ env.NETWORK_NAME }} \
+            --name openfga-server \
             -p 8080:8080 \
             -e OPENFGA_DATASTORE_ENGINE=postgres \
             -e OPENFGA_DATASTORE_URI=postgres://postgres:password@db:5432/postgres?sslmode=disable \
