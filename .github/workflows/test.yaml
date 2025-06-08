@@ -11,7 +11,7 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
-    container: docker:dind-rootless
+    container: docker:dind
     services:
       postgres:
         image: public.ecr.aws/docker/library/postgres:17
@@ -24,6 +24,10 @@ jobs:
           --health-timeout 5s
           --health-retries 5
     steps:
+      - name: install npm
+        run: |
+          apk add --no-cache npm
+
       - name: Checkout code
         uses: actions/checkout@v4
 
