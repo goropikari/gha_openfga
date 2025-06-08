@@ -1,4 +1,4 @@
-name: OpenFGA test
+name: OpenFGA test on github network
 
 on:
   push:
