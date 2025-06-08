@@ -33,10 +33,15 @@ services:
       - OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable
       - OPENFGA_LOG_FORMAT=json
     command: run
+    healthcheck:
+      test: ["CMD", "sh", "-c", "curl -sf http://127.0.0.1:8080/healthz | grep -q '\"status\":\"SERVING\"'"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
     ports:
       # Needed for the http server
       - "8080:8080"
       # # Needed for the grpc server (if used)
       # - "8081:8081"
-      # # Needed for the playground (Do not enable in prod!)
-      # - "3000:3000"
+      # Needed for the playground (Do not enable in prod!)
+      - "3000:3000"
