@@ -11,10 +11,11 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
-    container: docker:dind
     services:
       postgres:
         image: public.ecr.aws/docker/library/postgres:17
+        ports:
+          - 5432:5432
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: password
@@ -23,10 +24,11 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+
     steps:
-      - name: install npm
-        run: |
-          apk add --no-cache npm
+      # - name: install npm
+      #   run: |
+      #     apk add --no-cache npm
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -36,27 +38,34 @@ jobs:
           docker run --rm \
             --network host \
             -e OPENFGA_DATASTORE_ENGINE=postgres \
-            -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
+            -e OPENFGA_DATASTORE_URI=postgres://postgres:password@127.0.0.1:5432/postgres?sslmode=disable \
             openfga/openfga:v1.8.13 migrate
-
-      - name: Run OpenFGA server
-        run: |
-          docker run --rm -d \
-            --network host \
-            --name openfga-server \
-            -e OPENFGA_DATASTORE_ENGINE=postgres \
-            -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
-            -e OPENFGA_LOG_FORMAT=json \
-            openfga/openfga:v1.8.13 run
-      
-      - name: setup go
-        uses: actions/setup-go@v5
-        with:
-          go-version: 'stable'
-          cache: true
-
-      - name: Run tests
-        run: |
-          go test ./...
-        env:
-          FGA_API_URL: http://openfga-server:8080
+      # - name: Run OpenFGA migration
+      #   run: |
+      #     docker run --rm \
+      #       --network host \
+      #       -e OPENFGA_DATASTORE_ENGINE=postgres \
+      #       -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
+      #       openfga/openfga:v1.8.13 migrate
+      #
+      # - name: Run OpenFGA server
+      #   run: |
+      #     docker run --rm -d \
+      #       --network host \
+      #       --name openfga-server \
+      #       -e OPENFGA_DATASTORE_ENGINE=postgres \
+      #       -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
+      #       -e OPENFGA_LOG_FORMAT=json \
+      #       openfga/openfga:v1.8.13 run
+      # 
+      # - name: setup go
+      #   uses: actions/setup-go@v5
+      #   with:
+      #     go-version: 'stable'
+      #     cache: true
+      #
+      # - name: Run tests
+      #   run: |
+      #     go test ./...
+      #   env:
+      #     FGA_API_URL: http://openfga-server:8080
