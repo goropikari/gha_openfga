@@ -1,12 +1,12 @@
 {
-    "name": "OpenFGA",
-    // https://mcr.microsoft.com/en-us/artifact/mar/devcontainers/go/tags
-    "image": "mcr.microsoft.com/devcontainers/go:1.24-bookworm",
-    "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
-        "ghcr.io/devcontainers/features/sshd:1": {}
-    },
-    "containerEnv": {
-        "TERM": "xterm-256color"
-    }
+  "name": "OpenFGA",
+  // https://mcr.microsoft.com/en-us/artifact/mar/devcontainers/go/tags
+  "image": "mcr.microsoft.com/devcontainers/go:1.24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "containerEnv": {
+    "TERM": "xterm-256color"
+  }
 }
