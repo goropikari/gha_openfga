@@ -26,10 +26,6 @@ jobs:
           --health-retries 5
 
     steps:
-      # - name: install npm
-      #   run: |
-      #     apk add --no-cache npm
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -40,32 +36,25 @@ jobs:
             -e OPENFGA_DATASTORE_ENGINE=postgres \
             -e OPENFGA_DATASTORE_URI=postgres://postgres:password@127.0.0.1:5432/postgres?sslmode=disable \
             openfga/openfga:v1.8.13 migrate
-      # - name: Run OpenFGA migration
-      #   run: |
-      #     docker run --rm \
-      #       --network host \
-      #       -e OPENFGA_DATASTORE_ENGINE=postgres \
-      #       -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
-      #       openfga/openfga:v1.8.13 migrate
-      #
-      # - name: Run OpenFGA server
-      #   run: |
-      #     docker run --rm -d \
-      #       --network host \
-      #       --name openfga-server \
-      #       -e OPENFGA_DATASTORE_ENGINE=postgres \
-      #       -e OPENFGA_DATASTORE_URI=postgres://postgres:password@postgres:5432/postgres?sslmode=disable \
-      #       -e OPENFGA_LOG_FORMAT=json \
-      #       openfga/openfga:v1.8.13 run
-      # 
-      # - name: setup go
-      #   uses: actions/setup-go@v5
-      #   with:
-      #     go-version: 'stable'
-      #     cache: true
-      #
-      # - name: Run tests
-      #   run: |
-      #     go test ./...
-      #   env:
-      #     FGA_API_URL: http://openfga-server:8080
+
+      - name: Run OpenFGA server
+        run: |
+          docker run --rm -d \
+            --network host \
+            -p 8080:8080 \
+            -e OPENFGA_DATASTORE_ENGINE=postgres \
+            -e OPENFGA_DATASTORE_URI=postgres://postgres:password@127.0.0.1:5432/postgres?sslmode=disable \
+            -e OPENFGA_LOG_FORMAT=json \
+            openfga/openfga:v1.8.13 run
+
+      - name: setup go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          cache: true
+
+      - name: Run tests
+        run: |
+          go test ./...
+        env:
+          FGA_API_URL: http://127.0.0.1:8080
