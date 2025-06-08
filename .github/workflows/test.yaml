@@ -55,6 +55,6 @@ jobs:
 
       - name: Run tests
         run: |
-          go test ./...
+          go test -shuffle on ./...
         env:
           FGA_API_URL: http://127.0.0.1:8080
