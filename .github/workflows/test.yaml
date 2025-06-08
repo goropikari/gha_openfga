@@ -41,6 +41,7 @@ jobs:
         run: |
           docker run --rm -d \
             --network host \
+            --name openfga-server \
             -p 8080:8080 \
             -e OPENFGA_DATASTORE_ENGINE=postgres \
             -e OPENFGA_DATASTORE_URI=postgres://postgres:password@127.0.0.1:5432/postgres?sslmode=disable \
@@ -58,3 +59,7 @@ jobs:
           go test -shuffle on ./...
         env:
           FGA_API_URL: http://127.0.0.1:8080
+
+      - name: Stop OpenFGA server
+        run: |
+          docker stop openfga-server

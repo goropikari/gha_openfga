@@ -63,3 +63,7 @@ jobs:
           go test -shuffle on ./...
         env:
           FGA_API_URL: http://127.0.0.1:8080
+
+      - name: Stop OpenFGA server
+        run: |
+          docker stop openfga-server
