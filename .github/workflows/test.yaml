@@ -11,7 +11,7 @@ on:
 jobs:
   container-job:
     runs-on: ubuntu-latest
-    container: docker
+    container: docker:dind-rootless
     services:
       postgres:
         image: public.ecr.aws/docker/library/postgres:17
